@@ -1,0 +1,39 @@
+{
+  "name": "@knovator/api",
+  "version": "0.0.1",
+  "description": "Simple API Wrapper for axios to achieve productive api calls ",
+  "main": "./api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build api.ts",
+    "tsc-build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knovator/api.git"
+  },
+  "keywords": [
+    "Api",
+    "api",
+    "wrapper",
+    "axios",
+    "fetch",
+    "knovator",
+    "vimlesai"
+  ],
+  "author": "VimLeSai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/knovator/api/issues"
+  },
+  "homepage": "https://github.com/knovator/api#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "preact": "^10.5.14",
+    "qs": "^6.10.1"
+  },
+  "devDependencies": {
+    "@types/qs": "^6.9.7",
+    "typescript": "^4.4.2"
+  }
+}
