@@ -5,3 +5,4 @@ package-lock.json
 LICENSE
 .editorconfig
 .babelrc 
+.cache/*
