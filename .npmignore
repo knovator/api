@@ -6,3 +6,5 @@ LICENSE
 .editorconfig
 .babelrc 
 .cache/*
+tsconfog.json
+yarn.lock
