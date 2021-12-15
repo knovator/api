@@ -74,7 +74,7 @@ var cacheHandler = function (url) {
     }
 };
 var fetchUrl = function (_a) {
-    var type = _a.type, url = _a.url, _b = _a.data, data = _b === void 0 ? {} : _b, _c = _a.config, config = _c === void 0 ? {} : _c;
+    var _b = _a.type, type = _b === void 0 ? 'get' : _b, url = _a.url, _c = _a.data, data = _c === void 0 ? {} : _c, _d = _a.config, config = _d === void 0 ? {} : _d;
     setHeaders(config);
     url = config.hash ? url + "?hash=" + config.hash : url;
     cacheHandler(url);

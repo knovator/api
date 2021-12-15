@@ -1,4 +1,4 @@
-config/*
+config/.ts*
 api.ts
 node_modules/*
 package-lock.json
