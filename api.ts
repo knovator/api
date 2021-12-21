@@ -16,9 +16,9 @@ let cancel: Array<any> = [];
 const getEndPoint = (config: any) => {
   if (CONFIG.prefix) {
     let prefix = typeof CONFIG.prefix === 'function' ? CONFIG.prefix(config) : CONFIG.prefix
-    return CONFIG.baseUrl + "/" + prefix + "/";
+    return CONFIG.baseUrl + "/" + prefix;
   } else {
-    return CONFIG.baseUrl + "/";
+    return CONFIG.baseUrl;
   }
 };
 
@@ -31,7 +31,7 @@ const ACTION_HANDLERS: any = {
       queryUrl = `${queryUrl}?${query}`;
     }
 
-    return axios.get(`${getEndPoint(config)}${queryUrl}`, {
+    return axios.get(`${getEndPoint(config)}${url ? `${queryUrl}` : ''}`, {
       // credentials: 'include',
       // withCredentials: false,
       cancelToken: new axios.CancelToken((cToken) => {
@@ -41,22 +41,22 @@ const ACTION_HANDLERS: any = {
   },
 
   DELETE: (url: String, data: Object | any, config: any) =>
-    axios.delete(`${getEndPoint(config)}${url}`, { data }),
+    axios.delete(`${getEndPoint(config)}${url ? `/${url}` : ''}`, { data }),
 
   POST: (url: String, data: Object | any, config: any) =>
-    axios.post(`${getEndPoint(config)}${url}`, data, {
+    axios.post(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),
 
   PATCH: (url: String, data: Object | any, config: any) =>
-    axios.patch(`${getEndPoint(config)}${url}`, data, {
+    axios.patch(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),
 
   PUT: (url: String, data: Object | any, config: any) =>
-    axios.put(`${getEndPoint(config)}${url}`, data, {
+    axios.put(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),

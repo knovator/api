@@ -1,10 +1,12 @@
-config/.ts*
+config/*.ts
 api.ts
 node_modules/*
 package-lock.json
-LICENSE
 .editorconfig
 .babelrc 
-.cache/*
+.cache
+.vscode
 tsconfog.json
 yarn.lock
+CHANGELOG.md
+README.md

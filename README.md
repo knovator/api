@@ -1,5 +1,7 @@
 # @knovator/api
 
+![npm](https://img.shields.io/npm/v/@knovator/api?style=flat-square) ![npm](https://img.shields.io/npm/dt/@knovator/api?style=flat-square) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/@knovator/api?style=flat-square)
+
 `@knovator/api` provides simple wrapper for api calls and makes it much easier to mange your api calls. It provides two methods `fetchUrl` and `setAPIConfig`.
 
 ## setAPIConfig

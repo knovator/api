@@ -10,10 +10,10 @@ var cancel = [];
 var getEndPoint = function (config) {
     if (init_1.config.prefix) {
         var prefix = typeof init_1.config.prefix === 'function' ? init_1.config.prefix(config) : init_1.config.prefix;
-        return init_1.config.baseUrl + "/" + prefix + "/";
+        return init_1.config.baseUrl + "/" + prefix;
     }
     else {
-        return init_1.config.baseUrl + "/";
+        return init_1.config.baseUrl;
     }
 };
 var ACTION_HANDLERS = {
@@ -23,23 +23,23 @@ var ACTION_HANDLERS = {
             var query = QueryString.stringify(data);
             queryUrl = queryUrl + "?" + query;
         }
-        return axios_1["default"].get("" + getEndPoint(config) + queryUrl, {
+        return axios_1["default"].get("" + getEndPoint(config) + (url ? "" + queryUrl : ''), {
             cancelToken: new axios_1["default"].CancelToken(function (cToken) {
                 cancel.push({ url: url, cToken: cToken });
             })
         });
     },
     DELETE: function (url, data, config) {
-        return axios_1["default"]["delete"]("" + getEndPoint(config) + url, { data: data });
+        return axios_1["default"]["delete"]("" + getEndPoint(config) + (url ? "/" + url : ''), { data: data });
     },
     POST: function (url, data, config) {
-        return axios_1["default"].post("" + getEndPoint(config) + url, data, {});
+        return axios_1["default"].post("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
     },
     PATCH: function (url, data, config) {
-        return axios_1["default"].patch("" + getEndPoint(config) + url, data, {});
+        return axios_1["default"].patch("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
     },
     PUT: function (url, data, config) {
-        return axios_1["default"].put("" + getEndPoint(config) + url, data, {});
+        return axios_1["default"].put("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
     }
 };
 function setHeaders(_a) {
