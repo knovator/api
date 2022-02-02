@@ -15,7 +15,10 @@ let cancel: Array<any> = [];
 
 const getEndPoint = (config: any) => {
   if (CONFIG.prefix) {
-    let prefix = typeof CONFIG.prefix === 'function' ? CONFIG.prefix(config) : CONFIG.prefix
+    let prefix =
+      typeof CONFIG.prefix === "function"
+        ? CONFIG.prefix(config)
+        : CONFIG.prefix;
     return CONFIG.baseUrl + "/" + prefix;
   } else {
     return CONFIG.baseUrl;
@@ -31,7 +34,7 @@ const ACTION_HANDLERS: any = {
       queryUrl = `${queryUrl}?${query}`;
     }
 
-    return axios.get(`${getEndPoint(config)}${url ? `${queryUrl}` : ''}`, {
+    return axios.get(`${getEndPoint(config)}${url ? `${queryUrl}` : ""}`, {
       // credentials: 'include',
       // withCredentials: false,
       cancelToken: new axios.CancelToken((cToken) => {
@@ -41,22 +44,22 @@ const ACTION_HANDLERS: any = {
   },
 
   DELETE: (url: String, data: Object | any, config: any) =>
-    axios.delete(`${getEndPoint(config)}${url ? `/${url}` : ''}`, { data }),
+    axios.delete(`${getEndPoint(config)}${url ? `/${url}` : ""}`, { data }),
 
   POST: (url: String, data: Object | any, config: any) =>
-    axios.post(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
+    axios.post(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),
 
   PATCH: (url: String, data: Object | any, config: any) =>
-    axios.patch(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
+    axios.patch(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),
 
   PUT: (url: String, data: Object | any, config: any) =>
-    axios.put(`${getEndPoint(config)}${url ? `/${url}` : ''}`, data, {
+    axios.put(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
     }),
@@ -70,7 +73,11 @@ function setHeaders({ headers, authToken = true }: any) {
 
   // if token exits then set it to Authorization else remove it
   if (authToken && token) {
-    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+    // pass false to avoid any prefix
+    const { tokenPrefix = "Bearer" } = CONFIG;
+    axios.defaults.headers.common.Authorization = `${
+      tokenPrefix ? `${tokenPrefix} ` : ""
+    }${token}`;
   } else {
     delete axios.defaults.headers.common.Authorization;
   }
@@ -86,6 +93,8 @@ function setHeaders({ headers, authToken = true }: any) {
 function handleError(error: Error) {
   cache = [];
   CONFIG?.onError?.(error);
+
+  return Promise.reject(error);
 }
 
 const cacheHandler = (url: string) => {
@@ -100,7 +109,12 @@ const cacheHandler = (url: string) => {
   }
 };
 
-const fetchUrl = ({ type = 'get', url, data = {}, config = {} }: fetchUrlType) => {
+const fetchUrl = ({
+  type = "get",
+  url,
+  data = {},
+  config = {},
+}: fetchUrlType) => {
   setHeaders(config);
   url = config.hash ? `${url}?hash=${config.hash}` : url;
   cacheHandler(url);

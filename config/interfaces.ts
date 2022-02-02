@@ -1,6 +1,7 @@
 export interface configType {
   getToken?: Function | String;
   baseUrl: string;
+  tokenPrefix?: string;
   prefix?: Function | string;
   onError?: Function;
   handleCache?: boolean | undefined;

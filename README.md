@@ -15,7 +15,7 @@ You need to set wrapper's config one time before calling api. You can find docs 
 | `prefix`      | `function` or `string` | You can use a common prefix between API Endpoint and the URL of API. a prefix is an optional parameter. A prefix can be the function as well as string type. If you are using prefix as a function then you will get your passed config in arguments. |
 | `onError`     | `function`             | It is optional but if you pass function then it will be called on any error in API |
 | `handleCache` | `boolean`              | To enable API cancellation set it true. When enabled,  If the last API URL and the current API URL are the same then the last API will get canceled to prevent unnecessary API calls. |
-|
+| `tokenPrefix` | `false` or `string` | by default it will use `Bearer` for prefix, to not pass any prefix with authorization pass `false` |
 
 
 
@@ -47,7 +47,7 @@ setAPIConfig({
 |  url   | is is url of your api call (not including endpoint of api). refer Example to understand it |   undefined   |
 |  data  | payload that you want to pass in api                         |      {}       |
 | config | some configurations like headers, authToken (default true) and hash |      {}       |
-|
+
 
 ```jsx
 import fetchUrl from "@knovator/api"
