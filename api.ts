@@ -37,7 +37,7 @@ const ACTION_HANDLERS: any = {
     return axios.get(`${getEndPoint(config)}${url ? `${queryUrl}` : ""}`, {
       // credentials: 'include',
       // withCredentials: false,
-      cancelToken: new axios.CancelToken((cToken) => {
+      cancelToken: new axios.CancelToken((cToken: any) => {
         cancel.push({ url, cToken });
       }),
     });

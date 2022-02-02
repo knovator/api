@@ -4,7 +4,7 @@
   "private": false,
   "description": "Simple API Wrapper for axios to achieve productive api calls ",
   "main": "./api.js",
-  "type": "module",
+  "type": "commonjs",
   "module": "./api.js",
   "exports": {
     ".": {

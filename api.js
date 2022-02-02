@@ -9,7 +9,9 @@ var cache = [];
 var cancel = [];
 var getEndPoint = function (config) {
     if (init_1.config.prefix) {
-        var prefix = typeof init_1.config.prefix === 'function' ? init_1.config.prefix(config) : init_1.config.prefix;
+        var prefix = typeof init_1.config.prefix === "function"
+            ? init_1.config.prefix(config)
+            : init_1.config.prefix;
         return init_1.config.baseUrl + "/" + prefix;
     }
     else {
@@ -23,30 +25,31 @@ var ACTION_HANDLERS = {
             var query = QueryString.stringify(data);
             queryUrl = queryUrl + "?" + query;
         }
-        return axios_1["default"].get("" + getEndPoint(config) + (url ? "" + queryUrl : ''), {
+        return axios_1["default"].get("" + getEndPoint(config) + (url ? "" + queryUrl : ""), {
             cancelToken: new axios_1["default"].CancelToken(function (cToken) {
                 cancel.push({ url: url, cToken: cToken });
             })
         });
     },
     DELETE: function (url, data, config) {
-        return axios_1["default"]["delete"]("" + getEndPoint(config) + (url ? "/" + url : ''), { data: data });
+        return axios_1["default"]["delete"]("" + getEndPoint(config) + (url ? "/" + url : ""), { data: data });
     },
     POST: function (url, data, config) {
-        return axios_1["default"].post("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
+        return axios_1["default"].post("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
     },
     PATCH: function (url, data, config) {
-        return axios_1["default"].patch("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
+        return axios_1["default"].patch("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
     },
     PUT: function (url, data, config) {
-        return axios_1["default"].put("" + getEndPoint(config) + (url ? "/" + url : ''), data, {});
+        return axios_1["default"].put("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
     }
 };
 function setHeaders(_a) {
     var headers = _a.headers, _b = _a.authToken, authToken = _b === void 0 ? true : _b;
     var token = typeof init_1.config.getToken === "function" ? init_1.config.getToken() : init_1.config.getToken;
     if (authToken && token) {
-        axios_1["default"].defaults.headers.common.Authorization = "Bearer " + token;
+        var _c = init_1.config.tokenPrefix, tokenPrefix = _c === void 0 ? "Bearer" : _c;
+        axios_1["default"].defaults.headers.common.Authorization = "" + (tokenPrefix ? tokenPrefix + " " : "") + token;
     }
     else {
         delete axios_1["default"].defaults.headers.common.Authorization;
@@ -61,6 +64,7 @@ function handleError(error) {
     var _a;
     cache = [];
     (_a = init_1.config === null || init_1.config === void 0 ? void 0 : init_1.config.onError) === null || _a === void 0 ? void 0 : _a.call(init_1.config, error);
+    return Promise.reject(error);
 }
 var cacheHandler = function (url) {
     if (init_1.config.handleCache) {
@@ -74,7 +78,7 @@ var cacheHandler = function (url) {
     }
 };
 var fetchUrl = function (_a) {
-    var _b = _a.type, type = _b === void 0 ? 'get' : _b, url = _a.url, _c = _a.data, data = _c === void 0 ? {} : _c, _d = _a.config, config = _d === void 0 ? {} : _d;
+    var _b = _a.type, type = _b === void 0 ? "get" : _b, url = _a.url, _c = _a.data, data = _c === void 0 ? {} : _c, _d = _a.config, config = _d === void 0 ? {} : _d;
     setHeaders(config);
     url = config.hash ? url + "?hash=" + config.hash : url;
     cacheHandler(url);
