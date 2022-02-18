@@ -93,8 +93,6 @@ function setHeaders({ headers, authToken = true }: any) {
 function handleError(error: Error) {
   cache = [];
   CONFIG?.onError?.(error);
-
-  return Promise.reject(error);
 }
 
 const cacheHandler = (url: string) => {
@@ -123,7 +121,10 @@ const fetchUrl = ({
 
   return handler(url, data)
     .then((response: any) => Promise.resolve(response.data))
-    .catch((error: Error) => handleError(error));
+    .catch((error: Error) => {
+      handleError(error);
+      return Promise.reject(error);
+    });
 };
 
 export { setAPIConfig };

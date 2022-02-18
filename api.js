@@ -64,7 +64,6 @@ function handleError(error) {
     var _a;
     cache = [];
     (_a = init_1.config === null || init_1.config === void 0 ? void 0 : init_1.config.onError) === null || _a === void 0 ? void 0 : _a.call(init_1.config, error);
-    return Promise.reject(error);
 }
 var cacheHandler = function (url) {
     if (init_1.config.handleCache) {
@@ -84,6 +83,9 @@ var fetchUrl = function (_a) {
     cacheHandler(url);
     var handler = ACTION_HANDLERS[type.toUpperCase()];
     return handler(url, data)
-        .then(function (response) { return Promise.resolve(response.data); })["catch"](function (error) { return handleError(error); });
+        .then(function (response) { return Promise.resolve(response.data); })["catch"](function (error) {
+        handleError(error);
+        return Promise.reject(error);
+    });
 };
 exports["default"] = fetchUrl;
