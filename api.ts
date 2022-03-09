@@ -40,28 +40,35 @@ const ACTION_HANDLERS: any = {
       cancelToken: new axios.CancelToken((cToken: any) => {
         cancel.push({ url, cToken });
       }),
+      headers: config.headers,
     });
   },
 
   DELETE: (url: String, data: Object | any, config: any) =>
-    axios.delete(`${getEndPoint(config)}${url ? `/${url}` : ""}`, { data }),
+    axios.delete(`${getEndPoint(config)}${url ? `/${url}` : ""}`, {
+      data,
+      headers: config.headers,
+    }),
 
   POST: (url: String, data: Object | any, config: any) =>
     axios.post(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
+      headers: config.headers
     }),
 
   PATCH: (url: String, data: Object | any, config: any) =>
     axios.patch(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
+      headers: config.headers
     }),
 
   PUT: (url: String, data: Object | any, config: any) =>
     axios.put(`${getEndPoint(config)}${url ? `/${url}` : ""}`, data, {
       // credentials: 'include',
       // withCredentials: true,
+      headers: config.headers
     }),
 };
 
@@ -82,12 +89,13 @@ function setHeaders({ headers, authToken = true }: any) {
     delete axios.defaults.headers.common.Authorization;
   }
 
-  // setting other headers
-  if (typeof headers === "object") {
-    Object.entries((key: string, value: string) => {
-      axios.defaults.headers.post[key] = value;
-    });
-  }
+  // ! Removed: setting other headers 
+  // * added headers config in ACTION_HANDLER itself
+  // if (typeof headers === "object") {
+  //   Object.entries((key: string, value: string) => {
+  //     axios.defaults.headers.post[key] = value;
+  //   });
+  // }
 }
 
 function handleError(error: Error) {
@@ -119,7 +127,7 @@ const fetchUrl = ({
 
   const handler = ACTION_HANDLERS[type.toUpperCase()];
 
-  return handler(url, data)
+  return handler(url, data, config)
     .then((response: any) => Promise.resolve(response.data))
     .catch((error: Error) => {
       handleError(error);

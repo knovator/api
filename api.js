@@ -28,20 +28,30 @@ var ACTION_HANDLERS = {
         return axios_1["default"].get("" + getEndPoint(config) + (url ? "" + queryUrl : ""), {
             cancelToken: new axios_1["default"].CancelToken(function (cToken) {
                 cancel.push({ url: url, cToken: cToken });
-            })
+            }),
+            headers: config.headers
         });
     },
     DELETE: function (url, data, config) {
-        return axios_1["default"]["delete"]("" + getEndPoint(config) + (url ? "/" + url : ""), { data: data });
+        return axios_1["default"]["delete"]("" + getEndPoint(config) + (url ? "/" + url : ""), {
+            data: data,
+            headers: config.headers
+        });
     },
     POST: function (url, data, config) {
-        return axios_1["default"].post("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
+        return axios_1["default"].post("" + getEndPoint(config) + (url ? "/" + url : ""), data, {
+            headers: config.headers
+        });
     },
     PATCH: function (url, data, config) {
-        return axios_1["default"].patch("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
+        return axios_1["default"].patch("" + getEndPoint(config) + (url ? "/" + url : ""), data, {
+            headers: config.headers
+        });
     },
     PUT: function (url, data, config) {
-        return axios_1["default"].put("" + getEndPoint(config) + (url ? "/" + url : ""), data, {});
+        return axios_1["default"].put("" + getEndPoint(config) + (url ? "/" + url : ""), data, {
+            headers: config.headers
+        });
     }
 };
 function setHeaders(_a) {
@@ -53,11 +63,6 @@ function setHeaders(_a) {
     }
     else {
         delete axios_1["default"].defaults.headers.common.Authorization;
-    }
-    if (typeof headers === "object") {
-        Object.entries(function (key, value) {
-            axios_1["default"].defaults.headers.post[key] = value;
-        });
     }
 }
 function handleError(error) {
@@ -82,7 +87,7 @@ var fetchUrl = function (_a) {
     url = config.hash ? url + "?hash=" + config.hash : url;
     cacheHandler(url);
     var handler = ACTION_HANDLERS[type.toUpperCase()];
-    return handler(url, data)
+    return handler(url, data, config)
         .then(function (response) { return Promise.resolve(response.data); })["catch"](function (error) {
         handleError(error);
         return Promise.reject(error);
