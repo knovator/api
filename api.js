@@ -25,7 +25,7 @@ var ACTION_HANDLERS = {
             var query = QueryString.stringify(data);
             queryUrl = queryUrl + "?" + query;
         }
-        return axios_1["default"].get("" + getEndPoint(config) + (url ? "" + queryUrl : ""), {
+        return axios_1["default"].get("" + getEndPoint(config) + (url ? "/" + queryUrl : ""), {
             cancelToken: new axios_1["default"].CancelToken(function (cToken) {
                 cancel.push({ url: url, cToken: cToken });
             }),

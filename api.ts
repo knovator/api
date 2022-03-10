@@ -34,7 +34,7 @@ const ACTION_HANDLERS: any = {
       queryUrl = `${queryUrl}?${query}`;
     }
 
-    return axios.get(`${getEndPoint(config)}${url ? `${queryUrl}` : ""}`, {
+    return axios.get(`${getEndPoint(config)}${url ? `/${queryUrl}` : ""}`, {
       // credentials: 'include',
       // withCredentials: false,
       cancelToken: new axios.CancelToken((cToken: any) => {
