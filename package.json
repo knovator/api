@@ -1,6 +1,6 @@
 {
   "name": "@knovator/api",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "private": false,
   "description": "Simple API Wrapper for axios to achieve productive api calls ",
   "main": "./api.js",
