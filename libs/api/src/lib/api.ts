@@ -1,5 +1,5 @@
+/* eslint-disable no-async-promise-executor */
 import axios, { AxiosResponse } from 'axios';
-import QueryString from 'qs';
 import {
   iConfigType,
   iFetchUrl,
@@ -26,39 +26,61 @@ let cache: Array<string> = [];
 const cancel: Array<any> = [];
 
 const getEndPoint = (config: iConfigType) => {
+  const finalUrl = CONFIG.baseUrl.endsWith('/')
+    ? CONFIG.baseUrl
+    : `${config.baseUrl}/`;
   if (CONFIG.prefix) {
     const prefix =
       typeof CONFIG.prefix === 'function'
         ? CONFIG.prefix(config)
         : CONFIG.prefix;
-    return CONFIG.baseUrl + '/' + prefix;
+    return finalUrl + prefix;
   } else {
-    return CONFIG.baseUrl;
+    return finalUrl;
   }
 };
+
+export function serialize(obj: ObjectType) {
+  const qs = Object.keys(obj)
+    .reduce(function (a, k) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      a.push(k + '=' + encodeURIComponent(obj[k]));
+      return a;
+    }, [])
+    .join('&');
+  if (qs) return '?' + qs;
+  else return '';
+}
 
 const streamlineUrl = (url: string): string => {
   return url.replace(/\/+/g, '/');
 };
 
 const ACTION_HANDLERS: { [key in ACTION_TYPES]: ACTION } = {
-  GET: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
-    let queryUrl = url;
+  GET: (url: string, data: ObjectType, fetchConfig?: iFetchConfig) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let queryUrl = url || '';
+        if (queryUrl.startsWith('/')) queryUrl = queryUrl.substring(1);
 
-    if (data !== undefined) {
-      const query = QueryString.stringify(data);
-      if (query) queryUrl = `${queryUrl}?${query}`;
-    }
-    const finalUrl = streamlineUrl(
-      `${getEndPoint(CONFIG)}${url ? `/${queryUrl}` : ''}`
-    );
-    return axios.get(finalUrl, {
-      // credentials: 'include',
-      // withCredentials: false,
-      cancelToken: new axios.CancelToken((cToken: any) => {
-        cancel.push({ url, cToken });
-      }),
-      headers: fetchConfig.headers,
+        if (data !== undefined) {
+          const query = serialize(data);
+          if (query) queryUrl = `${queryUrl}?${query}`;
+        }
+        const finalUrl = `${getEndPoint(CONFIG)}${url ? queryUrl : ''}`;
+        const response = await axios.get(finalUrl, {
+          // credentials: 'include',
+          // withCredentials: false,
+          cancelToken: new axios.CancelToken((cToken: any) => {
+            cancel.push({ url, cToken });
+          }),
+          headers: fetchConfig?.headers || {},
+        });
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
   DELETE: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
@@ -102,7 +124,7 @@ const ACTION_HANDLERS: { [key in ACTION_TYPES]: ACTION } = {
   },
 };
 
-async function setHeaders({ headers, type }: iSetHeaders) {
+async function setHeaders({ headers = undefined, type }: iSetHeaders) {
   // getting token
   const token =
     typeof CONFIG.getToken === 'function'
