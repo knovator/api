@@ -1,12 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.css';
-import NxWelcome from './nx-welcome';
+import { Form, List } from './components/albums';
+import useAlbum from './hooks/useAlbum';
 
 export function App() {
+  const { list, loading, onFormSubmit, data, setData } = useAlbum();
   return (
     <>
-      <NxWelcome title="api-demo" />
-      <div />
+      <Form onSubmit={onFormSubmit} data={data} loading={loading} />
+      <List list={list} loading={loading} onClickItem={setData} />
     </>
   );
 }
