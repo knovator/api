@@ -1,1 +1,1 @@
-export * from './lib/api';
+export { fetchUrl as default, setAPIConfig } from './lib/api';

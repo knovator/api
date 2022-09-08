@@ -15,7 +15,7 @@ let CONFIG: iConfigType = {
   handleCache: true,
 };
 
-const setAPIConfig = (conf: iConfigType) => {
+export const setAPIConfig = (conf: iConfigType) => {
   CONFIG = {
     ...CONFIG,
     ...conf,
@@ -37,16 +37,22 @@ const getEndPoint = (config: iConfigType) => {
   }
 };
 
+const streamlineUrl = (url: string): string => {
+  return url.replace(/\/+/g, '/');
+};
+
 const ACTION_HANDLERS: { [key in ACTION_TYPES]: ACTION } = {
   GET: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
     let queryUrl = url;
 
     if (data !== undefined) {
       const query = QueryString.stringify(data);
-      queryUrl = `${queryUrl}?${query}`;
+      if (query) queryUrl = `${queryUrl}?${query}`;
     }
-
-    return axios.get(`${getEndPoint(CONFIG)}${url ? `/${queryUrl}` : ''}`, {
+    const finalUrl = streamlineUrl(
+      `${getEndPoint(CONFIG)}${url ? `/${queryUrl}` : ''}`
+    );
+    return axios.get(finalUrl, {
       // credentials: 'include',
       // withCredentials: false,
       cancelToken: new axios.CancelToken((cToken: any) => {
@@ -55,33 +61,45 @@ const ACTION_HANDLERS: { [key in ACTION_TYPES]: ACTION } = {
       headers: fetchConfig.headers,
     });
   },
-
-  DELETE: (url: string, data: ObjectType, fetchConfig: iFetchConfig) =>
-    axios.delete(`${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`, {
+  DELETE: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
+    const finalUrl = streamlineUrl(
+      `${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`
+    );
+    return axios.delete(finalUrl, {
       data,
       headers: fetchConfig.headers,
-    }),
-
-  POST: (url: string, data: ObjectType, fetchConfig: iFetchConfig) =>
-    axios.post(`${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`, data, {
+    });
+  },
+  POST: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
+    const finalUrl = streamlineUrl(
+      `${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`
+    );
+    return axios.post(finalUrl, data, {
       // credentials: 'include',
       // withCredentials: true,
       headers: fetchConfig.headers,
-    }),
-
-  PATCH: (url: string, data: ObjectType, fetchConfig: iFetchConfig) =>
-    axios.patch(`${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`, data, {
+    });
+  },
+  PATCH: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
+    const finalUrl = streamlineUrl(
+      `${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`
+    );
+    return axios.patch(finalUrl, data, {
       // credentials: 'include',
       // withCredentials: true,
       headers: fetchConfig.headers,
-    }),
-
-  PUT: (url: string, data: ObjectType, fetchConfig: iFetchConfig) =>
-    axios.put(`${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`, data, {
+    });
+  },
+  PUT: (url: string, data: ObjectType, fetchConfig: iFetchConfig) => {
+    const finalUrl = streamlineUrl(
+      `${getEndPoint(CONFIG)}${url ? `/${url}` : ''}`
+    );
+    return axios.put(finalUrl, data, {
       // credentials: 'include',
       // withCredentials: true,
       headers: fetchConfig.headers,
-    }),
+    });
+  },
 };
 
 async function setHeaders({ headers, type }: iSetHeaders) {
@@ -104,7 +122,7 @@ async function setHeaders({ headers, type }: iSetHeaders) {
 
   // ! Removed: setting other headers
   // * added headers config in ACTION_HANDLER itself
-  if (typeof headers === "object" && type) {
+  if (typeof headers === 'object' && type) {
     const actionType = type.toLowerCase() as unknown as string;
     Object.entries((key: string, value: string) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -131,28 +149,25 @@ const cacheHandler = (url: string) => {
   }
 };
 
-const fetchUrl = ({
+export const fetchUrl = ({
   type = 'GET',
   url,
   data = {},
   config = {},
 }: iFetchUrl) => {
-  return new Promise( (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const actionType = type.toUpperCase() as ACTION_TYPES;
     setHeaders({ headers: config.headers, type });
     url = config.hash ? `${url}?hash=${config.hash}` : url;
     cacheHandler(url);
-  
+
     const handler = ACTION_HANDLERS[actionType];
-  
+
     handler(url, data, config)
       .then((response: AxiosResponse) => resolve(response.data))
       .catch((error: Error) => {
         handleError(error);
         return reject(error);
       });
-  })
+  });
 };
-
-export { setAPIConfig };
-export default fetchUrl;
