@@ -1,0 +1,36 @@
+{
+  "name": "@knovator/api",
+  "version": "1.0.0",
+  "description": "Simple API Wrapper for axios to achieve productive api calls ",
+  "files": [
+    "src",
+    "package.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knovator/api.git"
+  },
+  "keywords": [
+    "Api",
+    "api",
+    "wrapper",
+    "axios",
+    "fetch",
+    "knovator",
+    "vimlesai"
+  ],
+  "author": "knovator",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/knovator/api/issues"
+  },
+  "homepage": "https://github.com/knovator/api#readme",
+  "dependencies": {
+    "qs": "^6.11.0",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "axios": "^0.27"
+  }
+}
