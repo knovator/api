@@ -1,6 +1,6 @@
 {
   "name": "@knovator/api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple API Wrapper for axios to achieve productive api calls ",
   "files": [
     "src",
@@ -27,10 +27,8 @@
   },
   "homepage": "https://github.com/knovator/api#readme",
   "dependencies": {
-    "qs": "^6.11.0",
-    "tslib": "^2.3.0"
-  },
-  "peerDependencies": {
+    "tslib": "^2.3.0",
     "axios": "^0.27"
-  }
+  },
+  "peerDependencies": {}
 }
