@@ -3,8 +3,8 @@ import { AxiosRequestHeaders, AxiosResponse } from 'axios';
 export interface iConfigType {
   baseUrl: string;
   tokenPrefix?: string;
-  getToken?: () => Promise<string> | string;
-  prefix?: (config: iConfigType) => string | string;
+  getToken?: string | (() => Promise<string>);
+  prefix?: string | ((config: iConfigType) => string);
   onError?: (error: Error) => void;
   handleCache?: boolean;
 }
