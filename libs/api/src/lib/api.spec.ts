@@ -3,105 +3,99 @@ import axios from 'axios';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+const domain = 'https://www.example.com';
 setAPIConfig({
-  baseUrl: 'https://www.google.com',
+  baseUrl: domain,
 });
 
 describe('@knovator/api', () => {
+  const payloadData = {
+    title: 'ABCD',
+  };
+  mockedAxios.get.mockResolvedValue({ data: {} });
+  mockedAxios.delete.mockResolvedValue({ data: {} });
+  mockedAxios.post.mockResolvedValue({ data: {} });
+  mockedAxios.put.mockResolvedValue({ data: {} });
+  mockedAxios.patch.mockResolvedValue({ data: {} });
+
   describe('GET, POST, PATCH, PUT, DELETE api calls', () => {
     it('should call GET API', async () => {
-      mockedAxios.get.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'GET',
         url: 'posts',
       });
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        'https://www.google.com/posts',
+        `${domain}/posts`,
         expect.anything()
       );
     });
     it('should call POST API', async () => {
-      const payloadData = {
-        title: 'ABCD',
-      };
-      mockedAxios.post.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'POST',
         url: 'posts',
         data: payloadData,
       });
       expect(mockedAxios.post).toHaveBeenCalledWith(
-        'https://www.google.com/posts',
+        `${domain}/posts`,
         payloadData,
         expect.anything() // headers
       );
     });
     it('should call PATCH API', async () => {
-      const payloadData = {
-        title: 'Updated Title',
-      };
-      mockedAxios.patch.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'PATCH',
         url: 'posts/1',
         data: payloadData,
       });
       expect(mockedAxios.patch).toHaveBeenCalledWith(
-        'https://www.google.com/posts/1',
+        `${domain}/posts/1`,
         payloadData,
         expect.anything() // headers
       );
     });
     it('should call PUT API', async () => {
-      const payloadData = {
-        title: 'Updated Title',
-      };
-      mockedAxios.put.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'PUT',
         url: 'posts/1',
         data: payloadData,
       });
       expect(mockedAxios.put).toHaveBeenCalledWith(
-        'https://www.google.com/posts/1',
+        `${domain}/posts/1`,
         payloadData,
         expect.anything() // headers
       );
     });
     it('should call DELETE API', async () => {
-      mockedAxios.delete.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'DELETE',
         url: 'posts/1',
       });
       expect(mockedAxios.delete).toHaveBeenCalledWith(
-        'https://www.google.com/posts/1',
+        `${domain}/posts/1`,
         expect.anything() // headers
       );
     });
     it('should add prefix to routes', async () => {
       setAPIConfig({
-        baseUrl: 'https://www.google.com',
+        baseUrl: domain,
         prefix: 'test',
       });
-      mockedAxios.get.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'GET',
         url: 'posts',
       });
       expect(mockedAxios.get).toHaveBeenCalledWith(
-        'https://www.google.com/test/posts',
+        `${domain}/test/posts`,
         expect.anything()
       );
       setAPIConfig({
-        baseUrl: 'https://www.google.com',
+        baseUrl: domain,
         prefix: '',
       });
     });
   });
   describe('Headers', () => {
     it('Headers should get sent in Request', async () => {
-      mockedAxios.get.mockResolvedValue({ data: {} });
       await fetchUrl({
         type: 'GET',
         url: 'posts',
@@ -111,16 +105,14 @@ describe('@knovator/api', () => {
           },
         },
       });
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        'https://www.google.com/posts',
-        { headers: { Authentication: 'ABCD' } }
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith(`${domain}/posts`, {
+        headers: { Authentication: 'ABCD' },
+      });
     });
     describe('Token', () => {
       it('Should send token in header if exists', async () => {
-        mockedAxios.get.mockResolvedValue({ data: {} });
         setAPIConfig({
-          baseUrl: 'https://www.google.com',
+          baseUrl: domain,
           tokenPrefix: 'jwt',
           getToken: 'ABCD',
         });
@@ -128,15 +120,13 @@ describe('@knovator/api', () => {
           type: 'GET',
           url: 'users',
         });
-        expect(mockedAxios.get).toHaveBeenCalledWith(
-          'https://www.google.com/users',
-          { headers: { Authorization: 'jwt ABCD' } }
-        );
+        expect(mockedAxios.get).toHaveBeenCalledWith(`${domain}/users`, {
+          headers: { Authorization: 'jwt ABCD' },
+        });
       });
       it('Should call token function for header if exists', async () => {
-        mockedAxios.get.mockResolvedValue({ data: {} });
         setAPIConfig({
-          baseUrl: 'https://www.google.com',
+          baseUrl: domain,
           tokenPrefix: 'jwt',
           getToken: () => Promise.resolve('ABCD'),
         });
@@ -144,10 +134,9 @@ describe('@knovator/api', () => {
           type: 'GET',
           url: 'users',
         });
-        expect(mockedAxios.get).toHaveBeenCalledWith(
-          'https://www.google.com/users',
-          { headers: { Authorization: 'jwt ABCD' } }
-        );
+        expect(mockedAxios.get).toHaveBeenCalledWith(`${domain}/users`, {
+          headers: { Authorization: 'jwt ABCD' },
+        });
       });
     });
   });
